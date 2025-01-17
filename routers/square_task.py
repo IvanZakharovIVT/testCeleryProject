@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import SquareCalculationTask
 from serializers.square_task import GetSquareTask, CreateSquareTask
+from celery_task import add_new_task
 
 from config.db_config import get_session
 
@@ -44,3 +45,17 @@ async def create_square_task(
     await session.flush()
     await session.commit()
     return task
+
+
+@router.post(
+    '/square_celery',
+    summary='Создание задачи (celery)',
+    description='Создание задачи (celery)',
+    response_model=CreateSquareTask,
+)
+async def create_square_task(
+        task_data: CreateSquareTask,
+        session: AsyncSession = Depends(get_session),
+):
+    result = add_new_task.delay(task_data.input_value)
+    return result
