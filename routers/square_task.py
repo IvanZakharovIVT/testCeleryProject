@@ -51,10 +51,12 @@ async def create_square_task(
     '/square_celery',
     summary='Создание задачи (celery)',
     description='Создание задачи (celery)',
-    response_model=CreateSquareTask,
+    response_model=int,
 )
 async def create_square_task(
         task_data: CreateSquareTask,
 ):
     result = add_new_task.delay(task_data.input_value)
-    return result
+    # min_result = result.get(timeout=10)
+    # return min_result
+    return 2
