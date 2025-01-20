@@ -55,7 +55,6 @@ async def create_square_task(
 )
 async def create_square_task(
         task_data: CreateSquareTask,
-        session: AsyncSession = Depends(get_session),
 ):
     result = add_new_task.delay(task_data.input_value)
     return result

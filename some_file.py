@@ -1,8 +1,12 @@
-from celery_2 import add
+import redis
 
-if __name__ == '__main__':
-    result = add.delay(10, 5)
-    print(f"Task submitted with ID: {result.id}")
+from tasks import me_reverse, app
 
-    # Wait for the result and print it
-    print(f"Result: {result.get()}")
+
+result = me_reverse.delay("Ivan Zakharov")
+
+print(result.ready())
+try:
+    print(result.get(timeout=5))
+except redis.exceptions.TimeoutError:
+    print("Timeout occurred while retrieving result")
