@@ -51,12 +51,16 @@ async def create_square_task(
     '/square_celery',
     summary='Создание задачи (celery)',
     description='Создание задачи (celery)',
-    response_model=int,
 )
 async def create_square_task(
         task_data: CreateSquareTask,
+        session: AsyncSession = Depends(get_session),
 ):
-    result = add_new_task.delay(task_data.input_value)
-    # min_result = result.get(timeout=10)
-    # return min_result
-    return 2
+    task_celery = add_new_task.delay(task_data.input_value)
+    task = SquareCalculationTask(
+        input_value=task_data.input_value,
+        celery_task_id=task_celery.id,
+    )
+    session.add(task)
+    await session.flush()
+    await session.commit()

@@ -1,10 +1,13 @@
 import time
+from decimal import Decimal
+
+from serializers.square_calc import GetSquareResult
 
 
-def sum_of_squares(n):
+def sum_of_squares(n: int) -> GetSquareResult:
     start_time = time.time()
     limit = round(n**0.5 // 1)
-    result_list = []
+    result_count = {}
     for i in range(limit, 0, -1):
         sq_list = []
         n_buffer = n
@@ -12,10 +15,18 @@ def sum_of_squares(n):
         n_buffer -= i ** 2
         while True:
             if not n_buffer:
-                result_list.append(len(sq_list))
+                result_count[len(sq_list)] = sq_list
                 break
             similar_sq = round(n_buffer**0.5 // 1)
             sq_list.append(similar_sq)
             n_buffer -= similar_sq**2
+    time_score = time.time() - start_time
     print("--- %s seconds ---" % (time.time() - start_time))
-    return min(result_list)
+    sq = GetSquareResult(
+        original_value=n,
+        square_count=min(result_count),
+        time_of_calculation=Decimal(time_score),
+        squares=result_count[min(result_count)]
+
+    )
+    return sq

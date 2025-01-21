@@ -13,4 +13,4 @@ def add_new_task(n_value):
     print("start task")
     r = sum_of_squares(n_value)
     print(r)
-    return r
+    return r.model_dump_json()
