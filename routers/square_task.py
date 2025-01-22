@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database import SquareCalculationTask
-from serializers.square_task import GetSquareTask, CreateSquareTask
+from serializers.square_task import SquareTaskGet, SquareTaskCreate
 from celery_task import add_new_task
 
 from config.db_config import get_session
@@ -14,7 +14,7 @@ router = APIRouter(tags=['tasks'])
     '/square/{task_id}',
     summary='Получение данных по задаче',
     description='Получение данных по задаче',
-    response_model=GetSquareTask
+    response_model=SquareTaskGet
 )
 async def get_square_task(
         task_id: int,
@@ -35,7 +35,7 @@ async def get_square_task(
     description='Создание задачи',
 )
 async def create_square_task(
-        task_data: CreateSquareTask,
+        task_data: SquareTaskCreate,
         session: AsyncSession = Depends(get_session),
 ):
     task = SquareCalculationTask(
@@ -53,7 +53,7 @@ async def create_square_task(
     description='Создание задачи (celery)',
 )
 async def create_square_task(
-        task_data: CreateSquareTask,
+        task_data: SquareTaskCreate,
         session: AsyncSession = Depends(get_session),
 ):
     task_celery = add_new_task.delay(task_data.input_value)

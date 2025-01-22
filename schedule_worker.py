@@ -13,7 +13,7 @@ from config.db_config import get_session
 from config.settings import MAX_TASK_EXECUTION_TIME
 from database import SquareCalculationTask, SquareInfo
 from infrastructure.enums.task_enum import TaskStatus
-from serializers.square_calc import GetSquareResult
+from serializers.square_calc import SquareResult
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -40,7 +40,7 @@ async def schedule_worker(db_session: AsyncSession):
         for task in tasks:
             c_task = celery_app.AsyncResult(task.celery_task_id)
             if c_task.status == "SUCCESS":
-                task_result = GetSquareResult(**json.loads(c_task.get()))
+                task_result = SquareResult(**json.loads(c_task.get()))
                 new_info = SquareInfo(
                     original_value=task.input_value,
                     square_count=task_result.square_count,
