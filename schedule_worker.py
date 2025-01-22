@@ -5,7 +5,6 @@ import sys
 from datetime import datetime, timedelta
 from typing import Sequence
 
-from pipenv.patched.safety.safety import session
 from sqlalchemy import Result, Select, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from celery_task import app as celery_app
@@ -19,20 +18,6 @@ from serializers.square_calc import GetSquareResult
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 logger.setLevel(logging.INFO)
-
-
-async def get_tasks_by_status(
-        self,
-        status: TaskStatus,
-) -> Sequence[SquareCalculationTask]:
-    select(SquareCalculationTask).filter(
-        SquareCalculationTask.status == TaskStatus.SUCCESS,
-    )
-
-    query: Select = select(SquareCalculationTask).filter_by(status=status)
-    result: Result = await self.session.execute(query)
-    tasks: Sequence[SquareCalculationTask] = result.scalars().all()
-    return tasks
 
 
 async def schedule_worker(db_session: AsyncSession):

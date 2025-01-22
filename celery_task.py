@@ -11,7 +11,7 @@ app.conf.update(
 )
 
 @app.task(time_limit=MAX_TASK_EXECUTION_TIME)
-def add_new_task(n_value):
+def add_new_task(n_value: int) -> str:
     print("start task")
     r = sum_of_squares(n_value)
     print(r)
