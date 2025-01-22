@@ -1,4 +1,6 @@
 from celery import Celery
+
+from config.settings import MAX_TASK_EXECUTION_TIME
 from infrastructure.services.calculate_squares import sum_of_squares
 
 
@@ -8,7 +10,7 @@ app.conf.update(
     result_backend='redis://localhost:6379/0'
 )
 
-@app.task
+@app.task(time_limit=MAX_TASK_EXECUTION_TIME)
 def add_new_task(n_value):
     print("start task")
     r = sum_of_squares(n_value)

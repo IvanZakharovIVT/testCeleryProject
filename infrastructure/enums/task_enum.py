@@ -4,8 +4,9 @@ from infrastructure.enums.base_enum import DescribedEnum
 
 
 class TaskStatus(str, DescribedEnum):
-    CREATED = "created"  # Распознан
-    SUCCESS = "success"  # Черновик
+    CREATED = "created"  # Создан
+    SUCCESS = "success"  # Завершен
+    TIMEOUT = "timeout"  # Завершен
     ERROR = "error"  # Отправлен валютному агенту | Опубликован
 
     @cached_property
@@ -13,5 +14,6 @@ class TaskStatus(str, DescribedEnum):
         return {
             self.CREATED: 'Задача создана',
             self.SUCCESS: 'Задача успешно завершена',
+            self.TIMEOUT: 'Время исполнения истекло',
             self.ERROR: 'Ошибка'
         }

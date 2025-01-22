@@ -28,3 +28,5 @@ INVOICE_TEMPLATE = TEMPLATE_FILE_PATH / "invoice_template.docx"
 CONTRACT_TEMPLATE = TEMPLATE_FILE_PATH / "contract_template.docx"
 
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "")
+
+MAX_TASK_EXECUTION_TIME = 6 * 60
