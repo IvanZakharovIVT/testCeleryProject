@@ -1,10 +1,9 @@
 from typing import Sequence
 
-from fastapi import APIRouter, Depends, status, HTTPException
-from sqlalchemy import select
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import SquareInfo
+from infrastructure.repository.information import InformationRepository
 from serializers.square_calc import SquareResultDetailed, SquareResultList
 
 from config.db_config import get_session
@@ -22,13 +21,7 @@ async def get_square_task(
         info_id: int,
         session: AsyncSession = Depends(get_session),
 ):
-    info: SquareInfo | None = await session.get(SquareInfo, info_id)
-    if not info:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            # detail=exc.error_message
-        )
-    return info
+    return await InformationRepository(session).get_by_id(info_id)
 
 
 @router.get(
@@ -40,7 +33,4 @@ async def get_square_task(
 async def get_square_task(
         session: AsyncSession = Depends(get_session),
 ):
-    result = await session.execute(
-        select(SquareInfo).order_by(SquareInfo.id.desc())
-    )
-    return result.scalars().all()
+    return await InformationRepository(session).get_all()
