@@ -24,6 +24,8 @@ services:
       context: .
       dockerfile: Dockerfile
     image: back_server
+    volumes:
+      - .:/app
     env_file:
       - .env
     ports:
@@ -45,7 +47,11 @@ services:
     image: back_server
     ports:
       - "8001:8000"
-    command: sh -c "python celery_task.py"
+    entrypoint: sh -c "python schedule_worker.py"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
     restart: unless-stopped
     depends_on:
       - celery_project_db

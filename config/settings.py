@@ -7,6 +7,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+print("POSTGRES_USER:", os.getenv('POSTGRES_USER'))
+print("POSTGRES_PASSWORD:", os.getenv('POSTGRES_PASSWORD'))
+print("POSTGRES_HOST:", os.getenv('POSTGRES_HOST'))
+print("POSTGRES_PORT:", os.getenv('POSTGRES_PORT'))
+print("POSTGRES_DB:", os.getenv('POSTGRES_DB'))
+
 POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 POSTGRES_HOST = os.getenv('POSTGRES_HOST')
