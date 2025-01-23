@@ -30,3 +30,7 @@ CONTRACT_TEMPLATE = TEMPLATE_FILE_PATH / "contract_template.docx"
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', "")
 
 MAX_TASK_EXECUTION_TIME = 6 * 60
+
+REDIS_HOST = os.getenv('REDIS_HOST', '')
+REDIS_PORT = os.getenv('REDIS_PORT', '')
+REDIS_PATH = CELERY_BROKER_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'

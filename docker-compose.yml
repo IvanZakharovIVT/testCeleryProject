@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  celery_project_db:
+    image: postgres:16
+    container_name: celery_project_db
+    env_file:
+      - ./.env
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    restart: on-failure
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+
+  back_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: back_server
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - celery_project_db
+
+  celery:
+    image: back_server
+    command: celery -A celery_task worker --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - celery_project_db
+      - redis
+      - back_server
+
+  task_worker:
+    image: back_server
+    ports:
+      - "8001:8000"
+    command: sh -c "python celery_task.py"
+    restart: unless-stopped
+    depends_on:
+      - celery_project_db
+      - back_server
+
+volumes:
+  postgres_data:
