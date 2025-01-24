@@ -1,0 +1,44 @@
+from typing import Annotated
+from security import token_security
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette import status
+
+from infrastructure.repository.users import UserRepository
+from serializers.square_task import SquareTaskGet
+
+from config.db_config import get_session
+from serializers.users import UserBase, UserCreateResponse
+from services.user.create_user_service import CreateUserService
+
+router = APIRouter(tags=['tasks'])
+
+
+@router.get(
+    '/user/{user_id}',
+    summary='Получение данных пользователя',
+    description='Получение данных пользователя',
+    response_model=SquareTaskGet
+)
+async def get_user_by_id(
+        user_id: int,
+        session: AsyncSession = Depends(get_session),
+):
+    return await UserRepository(session).get_by_id(user_id)
+
+
+@router.post(
+    '/create_user',
+    summary='Создание пользователя',
+    description='Создание пользователя',
+    response_model=UserCreateResponse,
+    status_code=status.HTTP_201_CREATED
+)
+async def create_user(
+        user: UserBase,
+        credentials: Annotated[dict, Depends(token_security)],
+        session: AsyncSession = Depends(get_session),
+):
+    new_user: UserCreateResponse = await CreateUserService(session).create(user)
+    await session.commit()
+    return new_user

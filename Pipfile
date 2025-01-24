@@ -18,5 +18,7 @@ python-dateutil= "==2.9.0"
 transliterate = "==1.10.2"
 celery = "==5.2.3"
 redis = "==4.5.4"
+fastapi-jwt = "==0.3.0"
+Authlib = "==1.4.0"
 
 [dev-packages]
