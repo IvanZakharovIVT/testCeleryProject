@@ -3,6 +3,7 @@ from typing import Optional, Any
 
 from pydantic import BaseModel, ConfigDict, constr, field_validator
 
+from database import User
 from infrastructure.enums.user_type import UserType
 from infrastructure.utils.validate_fields import validate_spaces_str_field
 
@@ -17,6 +18,13 @@ class UserBase(BaseModel):
     @classmethod
     def validate_spaces_str_field(cls, value: Any):
         return validate_spaces_str_field(value)
+
+    def get_db_model(self) -> User:
+        return User(
+            full_name=self.full_name,
+            user_type=self.user_type,
+        )
+
 
 
 class UserCreateResponse(BaseModel):

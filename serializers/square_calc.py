@@ -1,7 +1,10 @@
+import json
 from datetime import datetime
 from decimal import Decimal
 
 from pydantic import BaseModel
+
+from database import SquareInfo
 
 
 class SquareResult(BaseModel):
@@ -9,6 +12,14 @@ class SquareResult(BaseModel):
     square_count: int
     squares: list[int]
     time_of_calculation: Decimal
+
+    def get_db_model(self) -> SquareInfo:
+        return SquareInfo(
+            original_value=self.input_value,
+            square_count=self.square_count,
+            squares=json.dumps(self.squares),
+            time_of_calculation=self.time_of_calculation
+        )
 
 
 class SquareResultList(SquareResult):
