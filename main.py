@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config.settings import ORIGINS
+# from routers.exceptions.users import setup_user_handlers
 from routers.square_task import router as task_router
 from routers.square_calculation import router as calculation_router
 
@@ -24,3 +25,5 @@ app.add_middleware(
 
 app.include_router(task_router)
 app.include_router(calculation_router)
+
+# setup_user_handlers(app)

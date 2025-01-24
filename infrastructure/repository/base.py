@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Sequence
 
 from fastapi import HTTPException
-from sqlalchemy import Result
+from sqlalchemy import Result, Select
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
 
@@ -28,11 +28,16 @@ class BaseRepository:
         raise NotImplementedError
 
     async def get_all(self) -> Sequence[BaseDBModel]:
-        result = await self._get_all()
+        select_request = self._get_all_select()
+        result = await self._session.execute(select_request)
         return result.scalars().all()
-    #
+
     @abstractmethod
     async def _get_all(self) -> Result:
+        raise NotImplementedError
+
+    @abstractmethod
+    def _get_all_select(self) -> Select:
         raise NotImplementedError
 
     async def commit(self):

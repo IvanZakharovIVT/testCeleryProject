@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, Select
 from sqlalchemy.ext.baked import Result
 
 from database import SquareCalculationTask
@@ -15,3 +15,6 @@ class TaskRepository(BaseRepository):
         return await self._session.execute(
             select(SquareCalculationTask).order_by(SquareCalculationTask.id.desc())
         )
+
+    def _get_all_select(self) -> Select:
+        return select(SquareCalculationTask).order_by(SquareCalculationTask.id.desc())
