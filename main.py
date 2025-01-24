@@ -11,7 +11,7 @@ from routers.users import router as user_router
 app = FastAPI(
     root_path="/api",  # This should match your API base URL
     openapi_url="/openapi.json",
-    title="mpayments",
+    title="Squares calculation",
     version="1.0.0",
     openapi_version="3.1.0"
 )
