@@ -2,7 +2,8 @@ from typing import Annotated
 
 from fastapi.security import HTTPBasicCredentials
 
-from infrastructure.helpers.user import authenticate_and_get_user_jwt
+from infrastructure.enums.user_type import UserType
+from infrastructure.helpers.user import authenticate_and_get_user_jwt, check_user_permissions
 from security import token_security, basic_security, access_security
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -26,8 +27,11 @@ router = APIRouter(tags=['users'])
 )
 async def get_user_by_id(
         user_id: int,
+        credentials: Annotated[dict, Depends(token_security)],
         session: AsyncSession = Depends(get_session),
 ):
+    user = await authenticate_and_get_user_jwt(credentials.get('username'), session)
+    await check_user_permissions(user, [UserType.ADMIN])
     return await UserRepository(session).get_by_id(user_id)
 
 
@@ -55,6 +59,8 @@ async def create_user(
         credentials: Annotated[dict, Depends(token_security)],
         session: AsyncSession = Depends(get_session),
 ):
+    user = await authenticate_and_get_user_jwt(credentials.get('username'), session)
+    await check_user_permissions(user, [UserType.ADMIN])
     new_user: UserCreateResponse = await CreateUserService(session).create(user)
     await session.commit()
     return new_user
