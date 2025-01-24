@@ -32,7 +32,7 @@ class UserPermissionError(Exception):
 
 
 class UserUniqueUsernameError(UserValidateFieldError):
-    def __init__(self, username: str, iban: str):
+    def __init__(self, username: str):
         self.username = username
 
     @property
