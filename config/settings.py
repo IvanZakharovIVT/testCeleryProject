@@ -7,12 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-print("POSTGRES_USER:", os.getenv('POSTGRES_USER'))
-print("POSTGRES_PASSWORD:", os.getenv('POSTGRES_PASSWORD'))
-print("POSTGRES_HOST:", os.getenv('POSTGRES_HOST'))
-print("POSTGRES_PORT:", os.getenv('POSTGRES_PORT'))
-print("POSTGRES_DB:", os.getenv('POSTGRES_DB'))
-
 POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 POSTGRES_HOST = os.getenv('POSTGRES_HOST')
@@ -21,6 +15,8 @@ POSTGRES_DB = os.getenv('POSTGRES_DB')
 
 DATABASE_URL = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}'
 DATABASE_A_URL = f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}'
+
+SPECIAL_SYMBOLS_TEMPLATE = r"[^a-zA-Z0-9_\s]+"
 
 ORIGINS = json.loads(os.getenv("ORIGINS", '["*"]'))
 
