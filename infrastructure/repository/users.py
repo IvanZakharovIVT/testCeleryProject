@@ -29,16 +29,12 @@ class UserRepository(BaseRepository):
         self._session.add(user_for_change)
         await self._session.flush()
 
-    async def get_users(self) -> Sequence[User]:
+    async def get_non_admin_users(self) -> Sequence[User]:
+        base_select = self._get_all_select()
         result = await self._session.execute(
-            select(User).filter(User.user_type != UserType.ADMIN)
+            base_select.filter(User.user_type != UserType.ADMIN)
         )
         return result.scalars().all()
-
-    async def _get_all(self) -> Result:
-        return await self._session.execute(
-            select(User).order_by(User.id.desc())
-        )
 
     def _get_all_select(self) -> Select:
         return select(User).order_by(User.id.desc())

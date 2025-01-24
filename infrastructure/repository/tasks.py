@@ -11,10 +11,5 @@ class TaskRepository(BaseRepository):
         info: SquareCalculationTask | None = await self._session.get(SquareCalculationTask, unit_id)
         return info
 
-    async def _get_all(self) -> Result:
-        return await self._session.execute(
-            select(SquareCalculationTask).order_by(SquareCalculationTask.id.desc())
-        )
-
     def _get_all_select(self) -> Select:
         return select(SquareCalculationTask).order_by(SquareCalculationTask.id.desc())

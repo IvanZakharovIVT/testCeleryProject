@@ -33,10 +33,6 @@ class BaseRepository:
         return result.scalars().all()
 
     @abstractmethod
-    async def _get_all(self) -> Result:
-        raise NotImplementedError
-
-    @abstractmethod
     def _get_all_select(self) -> Select:
         raise NotImplementedError
 
