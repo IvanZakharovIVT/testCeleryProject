@@ -1,5 +1,9 @@
 from typing import Annotated
-from security import token_security
+
+from fastapi.security import HTTPBasicCredentials
+
+from infrastructure.helpers.user import authenticate_and_get_user_jwt
+from security import token_security, basic_security, access_security
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
@@ -11,7 +15,7 @@ from config.db_config import get_session
 from serializers.users import UserBase, UserCreateResponse
 from services.user.create_user_service import CreateUserService
 
-router = APIRouter(tags=['tasks'])
+router = APIRouter(tags=['users'])
 
 
 @router.get(
@@ -25,6 +29,18 @@ async def get_user_by_id(
         session: AsyncSession = Depends(get_session),
 ):
     return await UserRepository(session).get_by_id(user_id)
+
+
+@router.post("/auth")
+async def auth(
+        credentials: Annotated[HTTPBasicCredentials, Depends(basic_security)],
+        session: AsyncSession = Depends(get_session),
+):
+    user = await authenticate_and_get_user_jwt(credentials.username, session)
+
+    subject = {"username": user.username, "id": user.id, "user_type": user.user_type}
+    return {"access_token": access_security.create_access_token(subject=subject)}
+
 
 
 @router.post(
