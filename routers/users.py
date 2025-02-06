@@ -59,8 +59,8 @@ async def create_user(
         credentials: Annotated[dict, Depends(token_security)],
         session: AsyncSession = Depends(get_session),
 ):
-    user = await authenticate_and_get_user_jwt(credentials.get('username'), session)
-    await check_user_permissions(user, [UserType.ADMIN])
+    auth_user = await authenticate_and_get_user_jwt(credentials.get('username'), session)
+    await check_user_permissions(auth_user, [UserType.ADMIN])
     new_user: UserCreateResponse = await CreateUserService(session).create(user)
     await session.commit()
     return new_user
