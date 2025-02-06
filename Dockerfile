@@ -5,8 +5,6 @@ ENV USR_LOCAL_BIN=/usr/local/bin  \
 
 ENV PYTHONPATH=$PYTHONPATH:$PROJECT_ROOT
 
-ENV MAGICK_HOME=/usr
-
 ENV RUNTIME_PACKAGES="\
     libev \
     pcre \
@@ -29,14 +27,13 @@ RUN apk update && \
     apk --no-cache add $RUNTIME_PACKAGES && \
     mkdir -p $PROJECT_ROOT/media_files/buffer_files
 
-COPY ../Pipfile $PROJECT_ROOT/
-COPY ../Pipfile.lock $PROJECT_ROOT/
+COPY ../requirements.txt $PROJECT_ROOT/
 
 WORKDIR $PROJECT_ROOT
 
-RUN pip install pipenv && \
-    pipenv install --deploy --system --dev && \
-    pip uninstall -y pipenv && \
+RUN pip install uv
+RUN uv pip install -r requirements.txt --system && \
+    pip uninstall -y uv && \
     apk del build-deps && \
     rm -rf /var/cache/apk/*
 
