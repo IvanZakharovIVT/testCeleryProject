@@ -31,8 +31,8 @@ COPY ../requirements.txt $PROJECT_ROOT/
 
 WORKDIR $PROJECT_ROOT
 
-RUN pip install uv
-RUN uv pip install -r requirements.txt --system && \
+RUN pip install uv && \
+    uv pip install -r requirements.txt --system && \
     pip uninstall -y uv && \
     apk del build-deps && \
     rm -rf /var/cache/apk/*
