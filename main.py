@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqladmin import Admin
 
 from admin import UserAdmin, SquareInfoAdmin
-from config.db_config import get_session, engine, init_models, engine_sync
+from config.db_config import get_session, engine, engine_sync
 from config.settings import ORIGINS
 from on_start.create_default_admin import create_admin_user
 from routers.exceptions.users import setup_user_handlers
@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app1: FastAPI):
-    await init_models()
+    # await init_models()
     async for db_session in get_session():
         await create_admin_user(db_session)
         await db_session.flush()
