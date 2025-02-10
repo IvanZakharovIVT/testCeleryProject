@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi.security import HTTPBasicCredentials
 
 from infrastructure.enums.user_type import UserType
-from infrastructure.helpers.user import authenticate_and_get_user_jwt, check_user_permissions
+from infrastructure.helpers.user import authenticate_and_get_user_jwt, check_user_permissions, authenticate_and_get_user
 from security import token_security, basic_security, access_security
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -40,7 +40,7 @@ async def auth(
         credentials: Annotated[HTTPBasicCredentials, Depends(basic_security)],
         session: AsyncSession = Depends(get_session),
 ):
-    user = await authenticate_and_get_user_jwt(credentials.username, session)
+    user = await authenticate_and_get_user(credentials.username, credentials.password, session)
 
     subject = {"username": user.username, "id": user.id, "user_type": user.user_type}
     return {"access_token": access_security.create_access_token(subject=subject)}

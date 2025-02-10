@@ -8,12 +8,10 @@ from database import User
 from infrastructure.enums.user_type import UserType
 from infrastructure.exceptions.user import UserAuthorizationError
 from infrastructure.repository.users import UserRepository
-from security import token_security
 
 
-async def authenticate_and_get_user(credentials: Annotated[HTTPBasicCredentials, Depends(token_security)],
-                                    session: AsyncSession):
-    user = await UserRepository(session).authenticate_user(credentials.username, credentials.password)
+async def authenticate_and_get_user(username: str, password: str, session: AsyncSession):
+    user = await UserRepository(session).authenticate_user(username, password)
 
     return user
 
