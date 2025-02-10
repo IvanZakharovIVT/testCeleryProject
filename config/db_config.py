@@ -5,7 +5,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from config.settings import DATABASE_A_URL, DATABASE_URL
 
 engine = create_async_engine(DATABASE_A_URL)
-engine_sync = create_engine(DATABASE_URL)
+engine_sync = create_engine(
+    DATABASE_URL,
+    connect_args={"check_same_thread": False},
+)
 
 AsyncSessionLocal = async_sessionmaker(bind=engine)
 

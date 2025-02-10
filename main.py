@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette_admin.contrib.sqla import Admin
+from sqladmin import Admin
 
 from admin import UserAdmin, SquareInfoAdmin
 from config.db_config import get_session, engine, init_models, engine_sync
