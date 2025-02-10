@@ -3,8 +3,10 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette_admin.contrib.sqla import Admin
 
-from config.db_config import get_session
+from admin import UserAdmin, SquareInfoAdmin
+from config.db_config import get_session, engine, init_models, engine_sync
 from config.settings import ORIGINS
 from on_start.create_default_admin import create_admin_user
 from routers.exceptions.users import setup_user_handlers
@@ -17,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app1: FastAPI):
+    await init_models()
     async for db_session in get_session():
         await create_admin_user(db_session)
         await db_session.flush()
@@ -40,8 +43,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+admin = Admin(app, engine_sync)
+
+admin.add_view(UserAdmin)
+admin.add_view(SquareInfoAdmin)
+
 app.include_router(task_router)
 app.include_router(calculation_router)
 app.include_router(user_router)
+
+@app.get("/routes")
+def list_routes():
+    return [{"path": route.path, "name": route.name} for route in app.routes]
 
 setup_user_handlers(app)
