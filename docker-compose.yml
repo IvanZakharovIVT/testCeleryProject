@@ -58,7 +58,9 @@ services:
       - back_server
 
   nginx:
-    image: nginx:1.21
+    build:
+      context: .
+      dockerfile: ./deploy/nginx/Dockerfile.nginx
     command: nginx -g 'daemon off;'
     ports:
       - "80:80"
@@ -67,7 +69,6 @@ services:
       - media_volume:/app/src/server/media/
     depends_on:
       - back_server
-    restart: unless-stopped
 
 volumes:
   postgres_data:
