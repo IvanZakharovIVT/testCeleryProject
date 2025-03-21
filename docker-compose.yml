@@ -57,5 +57,19 @@ services:
       - celery_project_db
       - back_server
 
+  nginx:
+    image: nginx:1.21
+    command: nginx -g 'daemon off;'
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/src/server/static/
+      - media_volume:/app/src/server/media/
+    depends_on:
+      - back_server
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:
