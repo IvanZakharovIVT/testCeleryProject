@@ -9,11 +9,11 @@ from sqlalchemy import Result, Select, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from celery_task import app as celery_app
 
-from config.db_config import get_session
-from config.settings import MAX_TASK_EXECUTION_TIME
+from src.config.db_config import get_session
+from src.config.settings import MAX_TASK_EXECUTION_TIME
 from database import SquareCalculationTask, SquareInfo
-from infrastructure.enums.task_enum import TaskStatus
-from serializers.square_calc import SquareResult
+from src.infrastructure.enums.task_enum import TaskStatus
+from src.serializers.square_calc import SquareResult
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))

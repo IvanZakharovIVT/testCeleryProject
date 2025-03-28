@@ -1,7 +1,7 @@
 from celery import Celery
 
-from config.settings import MAX_TASK_EXECUTION_TIME, REDIS_PATH
-from infrastructure.services.calculate_squares import sum_of_squares
+from src.config.settings import MAX_TASK_EXECUTION_TIME, REDIS_PATH
+from src.infrastructure.services.calculate_squares import sum_of_squares
 
 
 app = Celery('celery_task', result_backend =REDIS_PATH, broker=REDIS_PATH)
