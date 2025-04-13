@@ -4,7 +4,7 @@ from authlib.jose import jwt
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordBearer, HTTPBearer
 
-from fastapi_jwt import JwtAccessBearer
+from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 from starlette.requests import Request
 
 from config.settings import JWT_SECRET_KEY
@@ -13,7 +13,7 @@ from infrastructure.exceptions.user import UserAuthorizationError
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 access_security = JwtAccessBearer(secret_key=JWT_SECRET_KEY, auto_error=True)
-
+refresh_security = JwtRefreshBearer(secret_key=JWT_SECRET_KEY, auto_error=True)
 
 class TokenEncode(HTTPBearer):
     async def __call__(
