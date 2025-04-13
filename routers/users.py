@@ -1,7 +1,9 @@
+from datetime import timedelta
 from typing import Annotated
 
 from fastapi.security import HTTPBasicCredentials
 
+from config.settings import EXPIRATION_TOKEN_TIMEDELTA
 from infrastructure.enums.user_type import UserType
 from infrastructure.helpers.user import authenticate_and_get_user_jwt, check_user_permissions, authenticate_and_get_user
 from security import token_security, basic_security, access_security
@@ -43,7 +45,10 @@ async def auth(
     user = await authenticate_and_get_user(credentials.username, credentials.password, session)
 
     subject = {"username": user.username, "id": user.id, "user_type": user.user_type}
-    return {"access_token": access_security.create_access_token(subject=subject)}
+    return {"access_token": access_security.create_access_token(
+        subject=subject,
+        expires_delta=timedelta(minutes=EXPIRATION_TOKEN_TIMEDELTA)
+    )}
 
 
 

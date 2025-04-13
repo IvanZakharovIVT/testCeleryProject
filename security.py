@@ -1,3 +1,4 @@
+from authlib.jose.errors import BadSignatureError, ExpiredTokenError
 from fastapi.security import HTTPBasic
 from authlib.jose import jwt
 from fastapi import HTTPException
@@ -22,8 +23,11 @@ class TokenEncode(HTTPBearer):
         token = str(credentials.credentials)
         try:
             payload = jwt.decode(token, JWT_SECRET_KEY)
+            payload.validate()
             return payload.get('subject', {})
-        except UserAuthorizationError:
+        except ExpiredTokenError:
+            raise HTTPException(status_code=401, detail="Срок действия токена закончился")
+        except (UserAuthorizationError, BadSignatureError):
             raise HTTPException(status_code=401, detail="Invalid token or expired token")
 
 
