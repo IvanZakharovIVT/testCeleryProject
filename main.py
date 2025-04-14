@@ -5,15 +5,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqladmin import Admin
 
-from admin.admin import UserAdmin, SquareInfoAdmin
-from admin.admin_auth import AdminAuth
-from config.db_config import get_session, engine
-from config.settings import ORIGINS
-from on_start.create_default_admin import create_admin_user
-from routers.exceptions.users import setup_user_handlers
-from routers.square_task import router as task_router
-from routers.square_calculation import router as calculation_router
-from routers.users import router as user_router
+from src.admin.admin import UserAdmin, SquareInfoAdmin
+from src.admin.admin_auth import AdminAuth
+from src.config.db_config import get_session, engine
+from src.config.settings import ORIGINS
+from src.on_start.create_default_admin import create_admin_user
+from src.routers.exceptions.users import setup_user_handlers
+from src.routers.square_task import router as task_router
+from src.routers.square_calculation import router as calculation_router
+from src.routers.users import router as user_router
 
 logger = logging.getLogger(__name__)
 

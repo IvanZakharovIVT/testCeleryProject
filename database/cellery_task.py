@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from database import SquareInfo
 from database.base import BaseDBModel
-from infrastructure.enums.task_enum import TaskStatus
+from src.infrastructure.enums.task_enum import TaskStatus
 
 
 class SquareCalculationTask(BaseDBModel):

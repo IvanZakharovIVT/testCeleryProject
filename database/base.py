@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, func, Integer, TIMESTAMP
 from sqlalchemy.orm import validates
 
-from config.db_config import Base
+from src.config.db_config import Base
 
 
 class BaseDBModel(Base):

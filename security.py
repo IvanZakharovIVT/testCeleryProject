@@ -7,8 +7,8 @@ from fastapi.security import OAuth2PasswordBearer, HTTPBearer
 from fastapi_jwt import JwtAccessBearer, JwtRefreshBearer
 from starlette.requests import Request
 
-from config.settings import JWT_SECRET_KEY
-from infrastructure.exceptions.user import UserAuthorizationError
+from src.config.settings import JWT_SECRET_KEY
+from src.infrastructure.exceptions.user import UserAuthorizationError
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
