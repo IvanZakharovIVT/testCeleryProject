@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.infrastructure.enums.user_type import UserType
 from src.infrastructure.helpers.user import authenticate_and_get_user_jwt, check_user_permissions
 from src.infrastructure.repository.information import InformationRepository
-from src.security import token_security, access_security
+from security import token_security, access_security
 from src.serializers.square_calc import SquareResultDetailed, SquareResultList
 
 from src.config.db_config import get_session
