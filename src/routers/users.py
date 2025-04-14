@@ -1,10 +1,12 @@
+from datetime import timedelta
 from typing import Annotated
 
 from fastapi.security import HTTPBasicCredentials
 
+from src.config.settings import AUTH_TOKEN_TIMEDELTA, REFRESH_TOKEN_TIMEDELTA
 from src.infrastructure.enums.user_type import UserType
 from src.infrastructure.helpers.user import authenticate_and_get_user_jwt, check_user_permissions, authenticate_and_get_user
-from security import token_security, basic_security, access_security
+from security import token_security, basic_security, access_security, refresh_security
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
@@ -43,8 +45,27 @@ async def auth(
     user = await authenticate_and_get_user(credentials.username, credentials.password, session)
 
     subject = {"username": user.username, "id": user.id, "user_type": user.user_type}
-    return {"access_token": access_security.create_access_token(subject=subject)}
+    return {
+        "access_token": access_security.create_access_token(
+            subject=subject,
+            expires_delta=timedelta(minutes=AUTH_TOKEN_TIMEDELTA)
+        ),
+        "refresh_token": refresh_security.create_refresh_token(
+            subject=subject,
+            expires_delta=timedelta(minutes=REFRESH_TOKEN_TIMEDELTA)
+        ),
+    }
 
+@router.post("/refresh")
+async def refresh_token(
+    token: Annotated[dict, Depends(refresh_security)],
+):
+    return {
+        "access_token": access_security.create_access_token(
+            subject=token.subject,
+            expires_delta = timedelta(minutes=AUTH_TOKEN_TIMEDELTA)
+        )
+    }
 
 
 @router.post(
