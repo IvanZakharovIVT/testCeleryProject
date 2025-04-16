@@ -35,7 +35,6 @@ basic_security = HTTPBasic()
 
 token_security = TokenEncode()
 
-security = HTTPBearer()
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     # Здесь должна быть ваша логика проверки токена
