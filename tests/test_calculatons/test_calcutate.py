@@ -13,6 +13,6 @@ def f_wrapper_function(request):
     yield request.param
     print('fixture: Завершение созданного объекта')
 
-def test_1(f_wrapper_function):
+def test_calculate_squares(f_wrapper_function):
   calc_result = sum_of_squares(f_wrapper_function[0])
   assert calc_result.squares == f_wrapper_function[1]
