@@ -1,0 +1,4 @@
+exclude = [
+    "alembic",
+    "**/__init__.py"
+]
